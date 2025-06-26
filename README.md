@@ -1,4 +1,4 @@
-# Azure Sentinel Threat Detection Lab – End-to-End SOC Simulation
+# Azure Sentinel Threat Detection Lab – Cloud-Based SOC Simulation
 
 This project simulates a real-world Security Operations Center (SOC) workflow using **Microsoft Sentinel** in **Azure**. 
 
