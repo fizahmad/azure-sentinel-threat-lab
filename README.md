@@ -101,6 +101,6 @@ I'll continue to update this repo as I complete each phase.
 
 I'm currently learning more about cloud security and blue team roles. I created this lab to apply what I’m studying in a practical way, using Microsoft tools like Sentinel, KQL, and Logic Apps. Sharing this publicly helps me stay accountable and maybe help others learning too.
 
-#### License
+## License
 
 This project is open-source and shared under the [MIT License](LICENSE). Anyone is welcome to explore, fork, or learn from it.
