@@ -87,6 +87,16 @@ Each test scenario includes:
 
 I'll continue to update this repo as I complete each phase.
 
+### Lab Progress Tracker
+
+- [x] Set up repo structure and folders
+- [x] Write base README files
+- [ ] Deploy VM in Azure
+- [ ] Configure Log Analytics + Sentinel
+- [ ] Simulate brute force attack
+- [ ] Write KQL rule for detection
+- [ ] Create Logic App alert automation
+
 ## Why I Made This
 
 I'm currently learning more about cloud security and blue team roles. I created this lab to apply what I’m studying in a practical way, using Microsoft tools like Sentinel, KQL, and Logic Apps. Sharing this publicly helps me stay accountable and maybe help others learning too.
