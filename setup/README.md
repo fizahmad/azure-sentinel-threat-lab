@@ -1,12 +1,19 @@
-# ⚙️ Lab Setup
+# ⚙️ Lab Setup Overview
 
-This folder contains steps and resources for setting up the Azure-based SOC lab environment.
+This folder contains detailed documentation for setting up the core infrastructure of this SOC lab simulation.
 
-Includes:
-- Creating Azure trial account
-- Deploying Windows VM as attack target
-- Enabling Microsoft Sentinel
-- Connecting VM logs via Log Analytics Workspace
-- Configuring essential data connectors (Security Events, Sysmon, etc.)
+## Purpose:
 
-These steps are the foundation for all further detection and response workflows in this lab.
+To build a local + cloud hybrid SOC lab environment that includes a **victim (Windows 10)** machine, an **attacker (Kali Linux)** machine, and integration with **Azure Sentinel** for detection and automation.
+
+
+
+## 🧱 Setup Components:
+
+| Component              | Purpose                          | File                                  |
+|------------------------|----------------------------------|---------------------------------------|
+| Azure Free Account     | Cloud backend + Sentinel SIEM    | [azure_account_setup.md](./azure_account_setup.md) |
+| Windows 10 Pro VM      | Target of attacks (victim)       | [windows_vm_setup.md](./windows_vm_setup.md)       |
+| Kali Linux VM          | Simulate attacks (attacker)      | [kali_vm_setup.md](./kali_vm_setup.md)             |
+
+
