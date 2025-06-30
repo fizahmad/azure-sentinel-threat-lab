@@ -25,3 +25,7 @@ Serve as the primary attack target in the lab to generate security-relevant logs
 
 - VM powered on, showing desktop or system info  
   `setup/screenshots/windows_vm.png`
+
+## References:
+- 🔗 [Download Windows 10 ISO (Official)](https://www.microsoft.com/software-download/windows10)
+- 🔗 [VirtualBox Official Site](https://www.virtualbox.org/)
