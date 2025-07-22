@@ -1,31 +1,36 @@
-# Windows 10 Pro VM – Victim (Target Machine)
+# Windows VM Setup (Victim/Target Machine)
 
-## Purpose:
-Serve as the primary attack target in the lab to generate security-relevant logs for Microsoft Sentinel.
+This document explains how I prepared a Windows 10 Pro virtual machine to simulate endpoint activity in the Sentinel lab.
 
-## VM Specifications:
+## 1. Create VM in VirtualBox
+- Downloaded a clean Windows 10 ISO.
+- Created a new Virtual Machine in **VirtualBox 7.0.22** with:
+  - 4GB RAM, 2 vCPUs
+  - Guest Additions installed
 
-| Setting        | Value                         |
-|----------------|-------------------------------|
-| Role           | Victim / Target               |
-| OS             | Windows 10 Pro (64-bit)       |
-| Version        | Latest ISO from Microsoft     |
-| Platform       | VirtualBox v7.0.22            |
-| Disk Size      | 50 GB (Dynamically Allocated) |
-| RAM            | 4096 MB (4 GB)                |
-| CPU            | 4 vCPUs                       |
+Ref: [windowsVM-target.png](./screenshots/windowsVM-target.png)
 
-## VirtualBox Network Configuration:
+## 2. Enable Required Logging
+- Enabled the following Event Log channels:
+  - Security
+  - System
+  - Application
+  - Windows PowerShell
+  - Sysmon
+- Installed and configured **Sysmon** with a curated config for detailed process/network tracking.
 
-| Adapter       | Type             | Purpose                      |
-|---------------|------------------|------------------------------|
-| Adapter 1     | NAT              | Internet access              |
+## 3. Configure Windows Firewall and Defender
+- Ensured Windows Firewall is enabled and logs both allowed and blocked connections.
+- Added exclusions for lab tools (e.g., Sysmon, WinLogBeat).
 
-## Screenshots:
+## 4. Azure Arc Agent Installation
+- Downloaded onboarding script from Azure Arc and run it in powershell.
 
-- VM powered on, showing desktop or system info  
-  `setup/screenshots/windows_vm.png`
+Ref: [arc-onboarding-script.png](./screenshots/arc-onboarding-script.png)
 
-## References:
-- 🔗 [Download Windows 10 ISO (Official)](https://www.microsoft.com/software-download/windows10)
-- 🔗 [VirtualBox Official Site](https://www.virtualbox.org/)
+- Connected the VM using the script.
+
+Ref: [arc-onboarded-machine.png](./screenshots/arc-onboarded-machine.png)
+
+
+**Next:** [sentinel_windows_onboarding.md](./sentinel_windows_onboarding.md)

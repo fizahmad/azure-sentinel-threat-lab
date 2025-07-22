@@ -45,4 +45,7 @@ Each component of the setup process is broken down into dedicated markdown files
 ✅ Kali Linux VM will be ready for executing attack scenarios  
 ✅ Microsoft Sentinel will be fully integrated with the Log Analytics Workspace and ready to receive and detect events  
 
+
+
+
 > All screenshots are stored inside [`/setup/screenshots`](./screenshots/)
