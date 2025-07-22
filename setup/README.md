@@ -14,8 +14,6 @@ To simulate and detect attacks in a cloud-native environment, we set up the foll
 - **Data Collection Rules (DCR)** – Define what logs are collected and how they are routed to Sentinel.
 - **Logic Apps** *(later)* – Will be used for automated incident response.
 
----
-
 ## Step-by-Step Setup
 
 Each component of the setup process is broken down into dedicated markdown files. Follow them in order:
@@ -40,8 +38,6 @@ Each component of the setup process is broken down into dedicated markdown files
 - Set up an Azure account and create a **Log Analytics Workspace**.
 - Deploy **Microsoft Sentinel** on top of it.
 - Create necessary resource groups, automation accounts, and permissions.
-
----
 
 ## Outcome
 
