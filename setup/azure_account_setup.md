@@ -1,25 +1,34 @@
-# Azure Free Trial Setup
+# Azure Account Setup – Microsoft Sentinel Lab
 
-## Purpose:
-Create a free-tier Microsoft Azure account to host Microsoft Sentinel, Log Analytics, and automation components required for a full SOC lab.
+## Objective
 
+To set up an Azure environment for Microsoft Sentinel by:
+- Creating a new Azure account with a **free trial**
+- Setting up core services required for Sentinel log ingestion
+- Preparing for onboarding non-Azure machines (via Azure Arc)
 
-## Steps Performed:
+## Free Trial Subscription
 
-1. Navigated to: [https://azure.microsoft.com/free](https://azure.microsoft.com/free)
-2. Signed in using an existing Microsoft account.
-3. Filled in:
-   - Full Name
-   - Contact Number
-   - Country & Address
-4. Provided a valid **credit/debit card** for identity verification (no charges made).
-5. Activated Azure Free Trial — confirmed $200 in free credits.
-6. Logged in to: [https://portal.azure.com](https://portal.azure.com)
+In order to get a Azure **Free Trial** that includes:
+- $200 USD credit for 30 days
+- Access to all core Azure services
+- No charges unless you upgrade manually
 
+🔗 [Create a Free Azure Account](https://azure.microsoft.com/en-us/free/)
 
-## Screenshots:
+## After Signing Up
 
-- Azure portal dashboard after login  
-  `setup/screenshots/azure_portal_dashboard.png`
+Once your Azure account is ready and you're signed into the portal, you'll land on the **Azure Home Dashboard**.
 
-> Account email and Subscription ID have been blurred for privacy.
+Ref: [azure_dashboard.png](./screenshots/azure_dashboard.png)
+
+From here, key services for our lab setup include:
+
+| Service | Description |
+|--------|-------------|
+| **Azure Arc** | For onboarding non-Azure Windows/Linux machines |
+| **Log Analytics Workspace** | Used to ingest logs |
+| **Microsoft Sentinel** | SIEM layer activated on top of the workspace |
+| **Resource Groups** | Logical containers to manage resources in the lab |
+
+Ref: [resource_group_created.png](./screenshots/resource_group_created.png)
