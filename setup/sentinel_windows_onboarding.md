@@ -35,7 +35,7 @@ This was achieved using **Azure Arc**, **Log Analytics**, and a **Data Collectio
 - Downloaded onboarding script from Azure Arc > Servers
 - Ran script in **elevated PowerShell** on the VM
 
-Ref: [azure_arc_script_execution.png](./screenshots/azure_arc_script_execution.png)
+Ref: [arc-onboarding-script.png](./screenshots/arc-onboarding-script.png)
 
 - Verified VM appears in **Azure Arc > Machines**
 
