@@ -1,0 +1,8 @@
+// Detects encoded or obfuscated PowerShell commands
+let lookback = 1h;
+SecurityEvent
+| where TimeGenerated >= ago(lookback)
+| where EventID == 4688
+| where Process has_any ("powershell.exe", "pwsh.exe")
+| where CommandLine has_any ("-enc ", "-encodedcommand", "FromBase64String")
+| project TimeGenerated, Computer, Account, Process, CommandLine, ParentProcessName

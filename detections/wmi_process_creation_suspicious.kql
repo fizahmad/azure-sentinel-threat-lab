@@ -1,0 +1,6 @@
+let lookback = 1h;
+SysmonEvent
+| where TimeGenerated >= ago(lookback)
+| where EventID == 1
+| where ParentImage endswith "wmiprvse.exe"
+| project TimeGenerated, Computer, Process, CommandLine, ParentImage

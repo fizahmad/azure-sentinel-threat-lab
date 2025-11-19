@@ -1,0 +1,6 @@
+// New scheduled tasks created
+let lookback = 1h;
+SecurityEvent
+| where TimeGenerated >= ago(lookback)
+| where EventID == 4698
+| project TimeGenerated, Computer, Account, TaskName=SubjectUserName, Command=CommandLine

@@ -1,0 +1,8 @@
+// Detects suspicious access to LSASS memory
+let lookback = 1h;
+SysmonEvent
+| where TimeGenerated >= ago(lookback)
+| where EventID == 10
+| where TargetImage endswith "lsass.exe"
+| where not (Process has_any ("taskmgr.exe", "lsass.exe", "wmiprvse.exe"))
+| project TimeGenerated, Computer, Account, Process, TargetImage, CallTrace

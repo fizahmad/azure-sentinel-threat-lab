@@ -14,3 +14,12 @@ Tools used:
 - Windows event log triggers
 
 Screenshots and notes will be added as each attack is executed and analyzed.
+
+
+## How to Trigger Rules
+
+
+### **1. Atomic Red Team**
+Install:
+```powershell
+iwr https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicredteam.ps1 -UseBasicParsing | iex

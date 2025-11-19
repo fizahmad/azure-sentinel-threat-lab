@@ -1,0 +1,8 @@
+// Detects remote connection to ADMIN$, C$, IPC$ shares across SMB
+let lookback = 1h;
+DeviceNetworkEvents
+| where TimeGenerated >= ago(lookback)
+| where RemotePort == 445
+| where RemoteUrl has_any ("ADMIN$", "C$", "IPC$")
+| where ActionType == "ConnectionSuccess"
+| project TimeGenerated, DeviceName, AccountName, RemoteIP, RemoteUrl, InitiatingProcessFileName

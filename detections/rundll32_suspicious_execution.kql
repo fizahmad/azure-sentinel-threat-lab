@@ -1,0 +1,8 @@
+// rundll32 used to execute non-DLL items or scripts
+let lookback = 1h;
+SecurityEvent
+| where TimeGenerated >= ago(lookback)
+| where EventID == 4688
+| where Process contains "rundll32.exe"
+| where CommandLine has_any (".js", ".vbs", "url.dll", "javascript:", "vbscript:")
+| project TimeGenerated, Computer, Account, Process, CommandLine
