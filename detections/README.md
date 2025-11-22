@@ -7,6 +7,7 @@ Each rule maps to a specific MITRE ATT&CK technique and is designed to be trigge
 ## Included Detection Rules
 
 ### **Execution**
+
 - `PowerShell_EncodedCommand.kql`  
   - Detects encoded or obfuscated PowerShell execution  
   - **MITRE:** T1059.001  
@@ -18,12 +19,14 @@ Each rule maps to a specific MITRE ATT&CK technique and is designed to be trigge
   - **Trigger:** Rundll32 with `.js` / `.vbs` payloads
 
 ### **Credential Access**
+
 - `LSASS_Memory_Dump.kql`  
   - Detects LSASS memory access from non-system processes  
   - **MITRE:** T1003.001  
   - **Trigger:** Procdump, Mimikatz, comsvcs.dll
 
 ### **Lateral Movement**
+
 - `SMB_LateralMovement.kql`  
   - Detects remote access to ADMIN$, C$, IPC$  
   - **MITRE:** T1021.002  
@@ -35,6 +38,7 @@ Each rule maps to a specific MITRE ATT&CK technique and is designed to be trigge
   - **Trigger:** `wmic process call create "cmd.exe /c calc.exe"`
 
 ### **Persistence**
+
 - `scheduled_task_creation_persistence.kql`  
   - Detects creation of new scheduled tasks (Windows Event 4698)  
   - **MITRE:** T1053.005  
