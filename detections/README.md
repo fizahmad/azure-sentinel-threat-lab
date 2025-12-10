@@ -1,45 +1,38 @@
-# Detection Rules (KQL)
+# Detection Rules (KQL → Sentinel Analytic Rules)
 
-This folder contains custom detection queries written in KQL (Kusto Query Language) for Microsoft Sentinel.
-
-Each rule maps to a specific MITRE ATT&CK technique and is designed to be triggered by attack behaviors executed in the `attack-simulation` environment.
+This folder contains custom detection queries as Sentinel analytic rule templates. Each rule maps to MITRE ATT&CK and aligns with behaviors in `attack-simulation/`.
 
 ## Included Detection Rules
 
-### **Execution**
+### Execution / Defense Evasion
+- `002_PowerShell_EncodedCommand.yaml` — Encoded/obfuscated PowerShell (T1059.001)
+- `003_rundll32_suspicious_execution.yaml` — Rundll32 launching scripts/URLs (T1218.011)
+- `010_Suspicious_PowerShell_Download.yaml` — IEX/IWR/DownloadString staging (T1059.001)
+- `011_PowerShell_AMSI_Bypass.yaml` — AMSI bypass strings (T1562.001)
+- `020_Suspicious_Child_Of_Office.yaml` — Office spawning scripting/PowerShell (T1204.002)
+- `013_Defender_Disable_Settings.yaml` — PowerShell disabling Defender (T1562.001)
 
-- `PowerShell_EncodedCommand.kql`  
-  - Detects encoded or obfuscated PowerShell execution  
-  - **MITRE:** T1059.001  
-  - **Trigger:** Atomic Red Team → `Invoke-AtomicTest T1059.001`
+### Credential Access
+- `001_LSASS_Memory_Dump.yaml` — LSASS memory access (T1003.001)
+- `019_Lsass_Handle_Access_Sysmon10.yaml` — LSASS handle spike (T1003.001)
+- `012_SAM_Database_Copy.yaml` — `reg save HKLM\SAM` (T1003.002)
+- `021_DCSync_Replication_Request.yaml` — DCSync replication from non-DC (T1003.006)
+- `007_RDP_BruteForce_LogonFailures.yaml` — Multiple 4625 RDP failures (T1110.001)
 
-- `rundll32_suspicious_execution.kql`  
-  - Detects LOLBin abuse via Rundll32 executing scripts  
-  - **MITRE:** T1218.011  
-  - **Trigger:** Rundll32 with `.js` / `.vbs` payloads
+### Lateral Movement
+- `005_SMB_LateralMovement.yaml` — Admin share connections (T1021.002)
+- `008_PsExec_Service_Creation.yaml` — PSEXESVC service creation (T1021.002)
+- `018_SMBexec_Admin_Share_Copy.yaml` — File copy into admin shares (T1021.002)
+- `017_Remote_PowerShell_Remoting.yaml` — WinRM wsmprovhost child (T1021.006)
+- `006_wmi_process_creation_suspicious.yaml` — WMI remote process (T1047)
 
-### **Credential Access**
+### Persistence / Privilege Escalation
+- `004_scheduled_task_creation_persistence.yaml` — New scheduled task (T1053.005)
+- `009_New_Local_Admin_Account.yaml` — New user added to Administrators (T1098)
+- `014_Registry_RunKey_Persistence.yaml` — Run/RunOnce modifications (T1547.001)
+- `016_Suspicious_WMI_Persistence.yaml` — WMI event subscription (T1546.003)
 
-- `LSASS_Memory_Dump.kql`  
-  - Detects LSASS memory access from non-system processes  
-  - **MITRE:** T1003.001  
-  - **Trigger:** Procdump, Mimikatz, comsvcs.dll
+### Impact
+- `015_VSSAdmin_Delete_Shadows.yaml` — Shadow copy deletion (T1490)
 
-### **Lateral Movement**
-
-- `SMB_LateralMovement.kql`  
-  - Detects remote access to ADMIN$, C$, IPC$  
-  - **MITRE:** T1021.002  
-  - **Trigger:** PsExec, copy over SMB, admin share access
-
-- `wmi_process_creation_suspicious.kql`  
-  - Detects WMI-based remote execution  
-  - **MITRE:** T1047  
-  - **Trigger:** `wmic process call create "cmd.exe /c calc.exe"`
-
-### **Persistence**
-
-- `scheduled_task_creation_persistence.kql`  
-  - Detects creation of new scheduled tasks (Windows Event 4698)  
-  - **MITRE:** T1053.005  
-  - **Trigger:** `schtasks.exe /create /tn backdoor /tr ...`
+> Use these with Sentinel’s Scheduled analytic rules. Each YAML already includes `queryFrequency`, `queryPeriod`, severity, MITRE mapping, and connector hints.
