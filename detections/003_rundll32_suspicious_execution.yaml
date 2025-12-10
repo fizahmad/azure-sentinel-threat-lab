@@ -1,8 +1,31 @@
-// rundll32 used to execute non-DLL items or scripts
-let lookback = 1h;
-SecurityEvent
-| where TimeGenerated >= ago(lookback)
-| where EventID == 4688
-| where Process contains "rundll32.exe"
-| where CommandLine has_any (".js", ".vbs", "url.dll", "javascript:", "vbscript:")
-| project TimeGenerated, Computer, Account, Process, CommandLine
+id: 7a2cb3c1-81f2-441b-9acf-9762647b96cc
+name: Rundll32 Suspicious Script Execution
+description: Detects LOLBin abuse where rundll32.exe launches script-based payloads or URL handlers instead of DLL exports.
+severity: Medium
+status: Available
+requiredDataConnectors:
+	- connectorId: SecurityEvents
+		dataTypes: [SecurityEvent]
+tactics: [DefenseEvasion, Execution]
+techniques: [T1218.011]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+eventGroupingSettings:
+	aggregationKind: SingleAlert
+kind: Scheduled
+query: |-
+	// rundll32 used to execute non-DLL items or scripts
+	let lookback = 1h;
+	SecurityEvent
+	| where TimeGenerated >= ago(lookback)
+	| where EventID == 4688
+	| where NewProcessName contains "rundll32.exe"
+	| where CommandLine has_any (".js", ".vbs", "url.dll", "javascript:", "vbscript:")
+	| project TimeGenerated, Computer, Account, NewProcessName, CommandLine
+version: 1.0.0
+tags:
+	- mitre-technique:T1218.011
+	- datasource:SecurityEvent
+	- usecase:LOLBin

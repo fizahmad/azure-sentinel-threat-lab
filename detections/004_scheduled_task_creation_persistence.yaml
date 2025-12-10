@@ -1,6 +1,29 @@
-// New scheduled tasks created
-let lookback = 1h;
-SecurityEvent
-| where TimeGenerated >= ago(lookback)
-| where EventID == 4698
-| project TimeGenerated, Computer, Account, TaskName=SubjectUserName, Command=CommandLine
+id: 6e8b47a8-2c0c-4517-9a9d-6c4f9b7f3125
+name: Scheduled Task Creation (Persistence)
+description: Detects creation of new scheduled tasks which are commonly used for persistence and execution.
+severity: Medium
+status: Available
+requiredDataConnectors:
+	- connectorId: SecurityEvents
+		dataTypes: [SecurityEvent]
+tactics: [Persistence, Execution]
+techniques: [T1053.005]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+eventGroupingSettings:
+	aggregationKind: SingleAlert
+kind: Scheduled
+query: |-
+	// New scheduled tasks created
+	let lookback = 1h;
+	SecurityEvent
+	| where TimeGenerated >= ago(lookback)
+	| where EventID == 4698
+	| project TimeGenerated, Computer, Account, TaskName=SubjectUserName, Command=CommandLine
+version: 1.0.0
+tags:
+	- mitre-technique:T1053.005
+	- datasource:SecurityEvent
+	- usecase:Persistence

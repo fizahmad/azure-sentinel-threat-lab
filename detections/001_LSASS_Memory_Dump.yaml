@@ -1,8 +1,33 @@
-// Detects suspicious access to LSASS memory
-let lookback = 1h;
-SysmonEvent
-| where TimeGenerated >= ago(lookback)
-| where EventID == 10
-| where TargetImage endswith "lsass.exe"
-| where not (Process has_any ("taskmgr.exe", "lsass.exe", "wmiprvse.exe"))
-| project TimeGenerated, Computer, Account, Process, TargetImage, CallTrace
+id: 4f4f2e9b-01f8-4a4c-8a1c-79cf7afdb4d4
+name: LSASS Memory Dump (Sysmon Event 10)
+description: Detects non-system processes accessing lsass.exe memory (common for credential dumping via Mimikatz, Procdump, comsvcs.dll).
+severity: High
+status: Available
+requiredDataConnectors:
+	- connectorId: SecurityEvents
+		dataTypes: [SecurityEvent]
+	- connectorId: AzureMonitorWindowsAgents
+		dataTypes: [SysmonEvent]
+tactics: [CredentialAccess]
+techniques: [T1003.001]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+eventGroupingSettings:
+	aggregationKind: SingleAlert
+kind: Scheduled
+query: |-
+	// Detects suspicious access to LSASS memory
+	let lookback = 1h;
+	SysmonEvent
+	| where TimeGenerated >= ago(lookback)
+	| where EventID == 10
+	| where TargetImage endswith "lsass.exe"
+	| where not (Process has_any ("taskmgr.exe", "lsass.exe", "wmiprvse.exe"))
+	| project TimeGenerated, Computer, Account, Process, TargetImage, CallTrace
+version: 1.0.0
+tags:
+	- mitre-technique:T1003.001
+	- datasource:Sysmon
+	- usecase:CredentialDumping
