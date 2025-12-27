@@ -1,41 +1,35 @@
-## Lab Setup
+# Lab Setup
 
-To simulate and detect attacks:
+This lab uses a local Windows VM connected to Microsoft Sentinel via Azure Arc.  All logs are collected and analyzed in the cloud while the VM runs on my machine.
 
-- **Windows VM** – Acts as the primary victim machine. Hosted locally (VirtualBox).
-- **Linux VM** – Used to simulate red team attacks. Also hosted locally.
-- **Microsoft Sentinel** – SIEM system, deployed in Azure.
-- **Azure Arc** – Connects the on-prem (local) VMs to Azure for monitoring.
-- **Log Analytics Workspace** – Collects logs from connected machines.
-- **Data Collection Rules (DCR)** – Define what logs are collected and how they are routed to Sentinel.
-- **Logic Apps** – Used for automated incident response.
+## Components
 
-## Step-by-Step Setup
+| Component | Purpose |
+|-----------|---------|
+| Windows 10 VM | Target machine for attack simulation |
+| Azure Arc | Connects local VM to Azure |
+| Log Analytics Workspace | Centralized log storage |
+| Microsoft Sentinel | SIEM for detection and alerting |
+| Sysmon | Enhanced Windows logging |
 
-Each component of the setup process is broken down into dedicated markdown files. 
+## Architecture
 
-Follow them in order:
+```
+┌──────────────────┐         ┌─────────────────────────────┐
+│                  │         │           Azure             │
+│ Windows Machine  │────────►│                             │
+│                  │  Azure  │  Log Analytics ─► Sentinel  │
+│   + Sysmon       │   Arc   │                             │
+│   + Arc Agent    │         │                             │
+└──────────────────┘         └─────────────────────────────┘
+```
 
-### 1️⃣ [Prepare the Windows VM](./windows_vm_setup.md)
+## Setup Guides
 
-- Set up a Windows 10 Pro VM in VirtualBox.
-- Configure basic settings, install Sysmon, and enable advanced Windows event logging.
+Complete these in order:
 
-### 2️⃣ [Connect Windows VM to Azure using Azure Arc](./sentinel_windows_onboarding.md)
+1. **[Azure Account Setup](./azure_account_setup.md)** - Create free Azure account, Log Analytics Workspace, and enable Sentinel
 
-- Use Azure Arc to onboard the local VM as an **Arc-enabled server**.
-- This allows remote management and telemetry from Azure.
+2. **[Windows VM Setup](./windows_vm_setup.md)** - Configure Windows 10 VM with Sysmon and required logging
 
-### 3️⃣ [Prepare and Connect Kali Linux VM](./kali_vm_setup.md)
-
-- Build a Kali Linux VM for later attack simulation.
-- Ensure network connectivity with the Windows VM.
-
-### 4️⃣ [Configure Azure Account & Sentinel Workspace](./azure_account_setup.md)
-
-- Set up an Azure account and create a **Log Analytics Workspace**.
-- Deploy **Microsoft Sentinel** on top of it.
-- Create necessary resource groups, automation accounts, and permissions.
-
-
-> All screenshots are stored inside [`/setup/screenshots`](./screenshots/)
+3. **[Sentinel Onboarding](./sentinel_windows_onboarding.md)** - Connect VM to Azure using Arc and configure data collection
