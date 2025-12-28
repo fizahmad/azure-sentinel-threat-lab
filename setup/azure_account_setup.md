@@ -1,5 +1,14 @@
 # Azure Account Setup
 
+From here, key services for our lab setup include:
+
+| Service | Description |
+|--------|-------------|
+| **Azure Arc** | For onboarding non-Azure Windows/Linux machines |
+| **Log Analytics Workspace** | Used to ingest logs |
+| **Microsoft Sentinel** | SIEM layer activated on top of the workspace |
+| **Resource Groups** | Logical containers to manage resources in the lab |
+
 ## Free Trial
 
 Azure offers a free trial with $200 credit for 30 days - sufficient for this lab.
@@ -8,8 +17,12 @@ Azure offers a free trial with $200 credit for 30 days - sufficient for this lab
 
 After signing in, the portal looks like this:
 
-<img width="700" height="450" alt="2025-12-27_20-29" align="center" src="https://github.com/user-attachments/assets/3efdfcb6-277f-4088-9cec-6b61a2da788d" />
-<p align="center"> Figure: Azure Dashboard </p>                                              
+<p align="center">
+  <img width="700" height="450" alt="Azure Dashboard"
+       src="https://github.com/user-attachments/assets/3efdfcb6-277f-4088-9cec-6b61a2da788d">
+</p>
+
+<p align="center"><em>Figure: Azure Dashboard</em></p>
 
 ## Resource Group
 
@@ -22,8 +35,12 @@ Created a resource group to organize all lab resources.
 | Name | `sentinel-lab-rg` |
 | Region | East US |
 
-<img width="700" height="450" alt="2025-12-27_20-33" src="https://github.com/user-attachments/assets/ae9911a7-d888-49f2-b63e-e71ebe946dfe" />
-<p align="center"> Figure: Resource Group </p>                                              
+<p align="center">
+  <img width="700" height="450" alt="Resource Group"
+       src="https://github.com/user-attachments/assets/ae9911a7-d888-49f2-b63e-e71ebe946dfe">
+</p>
+
+<p align="center"><em>Figure: Resource Group</em></p>
 
 ## Log Analytics Workspace
 
@@ -37,7 +54,12 @@ The workspace stores all collected logs.  Sentinel reads from this.
 | Name | `sentinel-lab-law` |
 | Region | East US |
 
-![Log Analytics Workspace](./log_analytics_workspace. png)
+<p align="center">
+  <img width="700" height="450" alt="Log Analytics workspace"
+       src="https://github.com/user-attachments/assets/8544744a-920f-4a7e-bec4-9fbc28d3484f">
+</p>
+
+<p align="center"><em>Figure: Log Analytics workspace</em></p>
 
 ## Enable Microsoft Sentinel
 
@@ -45,46 +67,12 @@ Added Sentinel to the workspace.
 
 **Portal:** Microsoft Sentinel > Create > Select workspace > Add
 
-![Sentinel Enabled](./sentinel_enabled.png)
+<p align="center">
+  <img width="700" height="450" alt="Sentinel"
+       src="https://github.com/user-attachments/assets/b9897e5c-9bd3-4c52-9cc1-4dd7625f16ff">
+</p>
 
-Azure setup complete. Next:  [Windows VM Setup](./windows_vm_setup.md)
+<p align="center"><em>Figure: Sentinel Added to Workspace</em></p>
 
 
-
-
-
-------------------
-# Azure Account Setup – Microsoft Sentinel Lab
-
-## Objective
-
-To set up an Azure environment for Microsoft Sentinel by:
-- Creating a new Azure account with a **free trial**
-- Setting up core services required for Sentinel log ingestion
-- Preparing for onboarding non-Azure machines (via Azure Arc)
-
-## Free Trial Subscription
-
-In order to get a Azure **Free Trial** that includes:
-- $200 USD credit for 30 days
-- Access to all core Azure services
-- No charges unless you upgrade manually
-
-🔗 [Create a Free Azure Account](https://azure.microsoft.com/en-us/free/)
-
-## After Signing Up
-
-Once your Azure account is ready and you're signed into the portal, you'll land on the **Azure Home Dashboard**.
-
-Ref: [azure_dashboard.png](./screenshots/azure_dashboard.png)
-
-From here, key services for our lab setup include:
-
-| Service | Description |
-|--------|-------------|
-| **Azure Arc** | For onboarding non-Azure Windows/Linux machines |
-| **Log Analytics Workspace** | Used to ingest logs |
-| **Microsoft Sentinel** | SIEM layer activated on top of the workspace |
-| **Resource Groups** | Logical containers to manage resources in the lab |
-
-Ref: [resource_group_created.png](./screenshots/resource_group_created.png)
+Next:  [Windows VM Setup](./windows_vm_setup.md)
