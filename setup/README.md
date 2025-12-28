@@ -24,6 +24,16 @@ This lab uses a local Windows VM connected to Microsoft Sentinel via Azure Arc. 
 └──────────────────┘         └─────────────────────────────┘
 ```
 
+## Workflow
+
+| Step | Description |
+|------|-------------|
+| 1️⃣ | Onboard VM with Azure Arc |
+| 2️⃣ | Create Log Analytics Workspace + Enable Sentinel |
+| 3️⃣ | Configure DCR (Security, System, Application logs) |
+| 4️⃣ | Assign VM to DCR (Auto-installs AMA) |
+| 5️⃣ | Logs start flowing to Sentinel |
+
 ## Setup Guides
 
 Complete these in order:
