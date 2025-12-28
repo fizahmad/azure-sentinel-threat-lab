@@ -1,10 +1,6 @@
-# Windows VM Log Ingestion via Azure Arc & Microsoft Sentinel
+# Connecting Windows VM to Sentinel
 
-## Objective
-
-Connect a non-Azure Windows 10 VM (running locally on VirtualBox) to Microsoft Sentinel for real-time log ingestion and threat detection **without hosting the VM in Azure**.
-
-This was achieved using **Azure Arc**, **Log Analytics**, and a **Data Collection Rule (DCR)** to collect Security, System, and Application logs.
+Azure Arc enables local VMs to send logs to Azure without hosting them in the cloud.
 
 ## Components Used
 
@@ -16,72 +12,79 @@ This was achieved using **Azure Arc**, **Log Analytics**, and a **Data Collectio
 | **Log Analytics Workspace** | Acts as the data store for logs, which Microsoft Sentinel processes for detection and investigation. |
 | **Microsoft Sentinel** | SIEM layer for detection rules and investigations |
 
-
-## Summary Workflow
-
-| Step | Description |
-|------|-------------|
-| 1️⃣ | Onboard VM with Azure Arc |
-| 2️⃣ | Create Log Analytics Workspace + Enable Sentinel |
-| 3️⃣ | Configure DCR (Security, System, Application logs) |
-| 4️⃣ | Assign VM to DCR (Auto-installs AMA) |
-| 5️⃣ | Logs start flowing to Sentinel |
-
-
-## Setup Steps
-
-### 1. Onboard Windows VM via Azure Arc
-
-- Downloaded onboarding script from Azure Arc > Servers
-- Ran script in **elevated PowerShell** on the VM
-
-Ref: [arc-onboarding-script.png](./screenshots/arc-onboarding-script.png)
-
-- Verified VM appears in **Azure Arc > Machines**
-
-Ref: [arc-onboarded-machine.png](./screenshots/arc-onboarded-machine.png)
-
-### 2. Create Log Analytics Workspace + Enable Sentinel
-
-- Created a new **Log Analytics Workspace**
-
-Ref: [log_analytics_workspace.png](./screenshots/log_analytics_workspace.png)
-
-- Enabled **Microsoft Sentinel** on the same workspace
-
-Ref: [sentinel_enabled.png](./screenshots/sentinel_enabled.png)
-
-### 3. Create a Data Collection Rule (DCR)
-
-- Target: **Windows Platform**
-- Collected Logs:
-  - `Security`
-  - `System`
-  - `Application`
-- Destination: The same workspace as Sentinel
-
-Ref: [dcr_created.png](./screenshots/dcr_created.png)
-
-### 4. Assign DCR to Arc-Connected VM
-
-- Added the VM as a **target resource**
-- Azure pushed the **Azure Monitor Agent** automatically
-
-### 5. Confirm Logs in Sentinel
-
-Verified the logs are Available under **Sentinel > Logs**
-
-Ref: [sentinel_logs_confirmed.png](./screenshots/sentinel_logs_confirmed.png)
-
 ## Why Azure Arc?
 
-Local VMs (like those in VirtualBox) can’t be onboarded like Azure-native VMs. Azure Arc bridges this gap **treating local or on-prem machines as first-class Azure resources**.
+Local VMs can’t be onboarded like Azure-native VMs. Azure Arc bridges this gap **treating local or on-prem machines as first-class Azure resources**.
 
 Benefits:
 - Enables cloud-native monitoring
 - Applies Azure policies and extensions
 - Integrates directly with Sentinel
 
-## Outcome
+## Azure Arc Agent
 
-My VirtualBox-hosted Windows VM is now feeding logs into Microsoft Sentinel as if it were an Azure VM, fully enabling detection rule testing, hunting, and playbook simulations as part of this SOC lab.
+**Portal:** Azure Arc > Infrastructure > Machines > Onboard/Create > Onboard Existing Machines > Generate script
+
+Download and run the script on the Windows VM as Administrator.
+
+<p align="center">
+  <img width="700" height="450" alt="Arc Script Download"
+       src="https://github.com/user-attachments/assets/933a68f5-38e2-4622-be89-8839af6d09f4">
+</p>
+<p align="center"><em>Figure: Arc Script Download</em></p>
+
+<br>
+
+<p align="center">
+  <img width="700" height="450" alt="Arc Agent Installing"
+       src="https://github.com/user-attachments/assets/415ae5d3-9dac-4514-8116-4f779505c584">
+</p>
+<p align="center"><em>Figure: Arc Agent Installing</em></p>
+
+After installation, the VM appears in Azure Arc: 
+
+<p align="center">
+  <img width="700" height="450" alt="VM in Azure Arc"
+       src="https://github.com/user-attachments/assets/4a14270f-afe2-46cf-89bf-656fa524f48a">
+</p>
+
+<p align="center"><em>Figure: VM in Azure Arc</em></p>
+
+## Data Collection Rule
+
+Configure which logs to collect from the VM. 
+
+**Portal:** Data Collection Rules > Create
+
+| Setting | Value |
+|---------|-------|
+| Platform | Windows |
+| Resources | Select Arc-connected VM |
+| Data Sources | Security, System, Application, Sysmon |
+
+![Data Collection Rule](./dcr_created.png)
+
+The Azure Monitor Agent installs automatically when the rule is applied.
+
+## Verify Log Ingestion
+
+After 10-15 minutes, test log flow in Sentinel. 
+
+**Portal:** Sentinel > Logs
+
+```kql
+SecurityEvent
+| take 10
+```
+
+![Security Logs](./security_logs_test.png)
+
+```kql
+SysmonEvent
+| take 10
+```
+
+![Sysmon Logs](./sysmon_logs_test. png)
+
+Setup complete. The VM is now sending logs to Sentinel. 
+
