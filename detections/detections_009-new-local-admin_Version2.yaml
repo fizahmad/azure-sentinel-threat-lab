@@ -1,0 +1,25 @@
+id: 009-new-local-admin
+name: New Local Admin Account Created
+description: Detects when a new user is added to local Administrators group - potential privilege escalation.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes:  [SecurityEvent]
+tactics: [Persistence, PrivilegeEscalation]
+techniques: [T1098]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind: Scheduled
+query:  |-
+  SecurityEvent
+  | where TimeGenerated >= ago(1h)
+  | where EventID == 4732
+  | where TargetSid endswith "-544"
+  | project TimeGenerated, Computer, Account, MemberName, TargetAccount
+version: 1.0.0
+tags:
+  - T1098
+  - PrivilegeEscalation

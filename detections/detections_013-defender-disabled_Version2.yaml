@@ -1,0 +1,25 @@
+id: 013-defender-disabled
+name: Windows Defender Disabled
+description:  Detects PowerShell commands disabling Windows Defender real-time protection. 
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [DefenseEvasion]
+techniques: [T1562.001]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind:  Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where Image has_any ("powershell.exe", "pwsh.exe")
+  | where CommandLine has_any ("DisableRealtimeMonitoring", "Set-MpPreference", "DisableBehaviorMonitoring")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version: 1.0.0
+tags:
+  - T1562.001
+  - DefenderTampering

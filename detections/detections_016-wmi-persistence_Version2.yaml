@@ -1,0 +1,23 @@
+id: 016-wmi-persistence
+name: WMI Event Subscription Persistence
+description: Detects WMI event subscriptions created for persistence. 
+severity: Medium
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [Persistence]
+techniques: [T1546.003]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind:  Scheduled
+query: |-
+  SysmonParsed
+  | where EventID in (19, 20, 21)
+  | project TimeGenerated, Computer, User, EventType, Operation, Consumer, Filter
+version: 1.0.0
+tags:
+  - T1546.003
+  - WMIPersistence

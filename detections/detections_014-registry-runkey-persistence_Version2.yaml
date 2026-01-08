@@ -1,0 +1,24 @@
+id: 014-registry-runkey-persistence
+name: Registry Run Key Persistence
+description: Detects modifications to Run/RunOnce registry keys for persistence.
+severity: Medium
+status: Available
+requiredDataConnectors:
+  - connectorId:  AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [Persistence]
+techniques: [T1547.001]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind:  Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 13
+  | where TargetObject has_any ("\\Run\\", "\\RunOnce\\")
+  | project TimeGenerated, Computer, User, Image, TargetObject, Details
+version: 1.0.0
+tags:
+  - T1547.001
+  - Persistence

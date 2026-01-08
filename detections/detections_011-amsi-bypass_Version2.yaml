@@ -1,0 +1,25 @@
+id: 011-amsi-bypass
+name: PowerShell AMSI Bypass Detected
+description: Detects AMSI bypass attempts in PowerShell commands - defense evasion technique.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics:  [DefenseEvasion]
+techniques: [T1562.001]
+queryFrequency: 1h
+queryPeriod:  1h
+triggerOperator: gt
+triggerThreshold:  0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where Image has_any ("powershell.exe", "pwsh.exe")
+  | where CommandLine has_any ("AmsiInitFailed", "amsi.dll", "AmsiScanBuffer", "AmsiContext")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version:  1.0.0
+tags:
+  - T1562.001
+  - AMSIBypass

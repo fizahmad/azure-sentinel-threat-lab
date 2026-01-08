@@ -1,0 +1,25 @@
+id: 020-office-child-process
+name:  Suspicious Office Child Process
+description:  Detects Office applications spawning suspicious child processes like PowerShell, cmd - macro execution indicator.
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [Execution]
+techniques: [T1204. 002]
+queryFrequency:  1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where ParentImage has_any ("WINWORD.EXE", "EXCEL.EXE", "POWERPNT.EXE", "OUTLOOK.EXE")
+  | where Image has_any ("powershell.exe", "cmd.exe", "wscript.exe", "cscript.exe", "mshta.exe")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version: 1.0.0
+tags:
+  - T1204.002
+  - MacroExecution

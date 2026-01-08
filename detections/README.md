@@ -1,38 +1,84 @@
-# Detection Rules (KQL → Sentinel Analytic Rules)
+# Detection Rules
 
-This folder contains custom detection queries as Sentinel analytic rule templates. Each rule maps to MITRE ATT&CK and aligns with behaviors in `attack-simulation/`.
+Custom KQL detection rules for Microsoft Sentinel.  Each rule maps to MITRE ATT&CK and works with the log parsers in `parsers/`.
 
-## Included Detection Rules
+## Prerequisites
 
-### Execution / Defense Evasion
-- `002_PowerShell_EncodedCommand.yaml` — Encoded/obfuscated PowerShell (T1059.001)
-- `003_rundll32_suspicious_execution.yaml` — Rundll32 launching scripts/URLs (T1218.011)
-- `010_Suspicious_PowerShell_Download.yaml` — IEX/IWR/DownloadString staging (T1059.001)
-- `011_PowerShell_AMSI_Bypass.yaml` — AMSI bypass strings (T1562.001)
-- `020_Suspicious_Child_Of_Office.yaml` — Office spawning scripting/PowerShell (T1204.002)
-- `013_Defender_Disable_Settings.yaml` — PowerShell disabling Defender (T1562.001)
+Before using these rules, deploy the parser functions from `parsers/`:
+- `SysmonParsed` - for Sysmon-based detections
+- `PowerShellParsed` - for PowerShell log detections
+
+## Rules Overview
+
+| ID | Name | MITRE | Severity | Data Source |
+|----|------|-------|----------|-------------|
+| 001 | LSASS Memory Dump | T1003.001 | High | Sysmon EID 10 |
+| 002 | PowerShell Encoded Command | T1059.001 | High | SecurityEvent 4688 |
+| 003 | Rundll32 Suspicious Execution | T1218.011 | Medium | Sysmon EID 1 |
+| 004 | Scheduled Task Persistence | T1053.005 | Medium | Sysmon EID 1 |
+| 005 | SMB Lateral Movement | T1021.002 | High | Sysmon EID 3 |
+| 006 | WMI Process Creation | T1047 | Medium | Sysmon EID 1 |
+| 007 | RDP Brute Force | T1110.001 | High | SecurityEvent 4625 |
+| 008 | PsExec Service Creation | T1021.002 | High | SecurityEvent 7045 |
+| 009 | New Local Admin | T1098 | High | SecurityEvent 4732 |
+| 010 | PowerShell Download | T1059.001 | High | Sysmon EID 1 |
+| 011 | AMSI Bypass | T1562.001 | High | Sysmon EID 1 |
+| 012 | SAM Database Copy | T1003.002 | High | Sysmon EID 1 |
+| 013 | Defender Disabled | T1562.001 | High | Sysmon EID 1 |
+| 014 | Registry Run Key Persistence | T1547.001 | Medium | Sysmon EID 13 |
+| 015 | Shadow Copy Deletion | T1490 | High | Sysmon EID 1 |
+| 016 | WMI Persistence | T1546.003 | Medium | Sysmon EID 19/20/21 |
+| 017 | WinRM Remoting | T1021.006 | Medium | Sysmon EID 1 |
+| 018 | SMB File Copy | T1021.002 | High | Sysmon EID 11 |
+| 019 | LSASS Handle Access Spike | T1003.001 | High | Sysmon EID 10 |
+| 020 | Office Child Process | T1204.002 | High | Sysmon EID 1 |
+| 021 | DCSync | T1003.006 | Critical | SecurityEvent 4662 |
+
+## By MITRE Tactic
+
+### Execution
+- 002 - PowerShell Encoded Command
+- 003 - Rundll32 Suspicious Execution
+- 010 - PowerShell Download
+- 020 - Office Child Process
 
 ### Credential Access
-- `001_LSASS_Memory_Dump.yaml` — LSASS memory access (T1003.001)
-- `019_Lsass_Handle_Access_Sysmon10.yaml` — LSASS handle spike (T1003.001)
-- `012_SAM_Database_Copy.yaml` — `reg save HKLM\SAM` (T1003.002)
-- `021_DCSync_Replication_Request.yaml` — DCSync replication from non-DC (T1003.006)
-- `007_RDP_BruteForce_LogonFailures.yaml` — Multiple 4625 RDP failures (T1110.001)
+- 001 - LSASS Memory Dump
+- 007 - RDP Brute Force
+- 012 - SAM Database Copy
+- 019 - LSASS Handle Access Spike
+- 021 - DCSync
 
 ### Lateral Movement
-- `005_SMB_LateralMovement.yaml` — Admin share connections (T1021.002)
-- `008_PsExec_Service_Creation.yaml` — PSEXESVC service creation (T1021.002)
-- `018_SMBexec_Admin_Share_Copy.yaml` — File copy into admin shares (T1021.002)
-- `017_Remote_PowerShell_Remoting.yaml` — WinRM wsmprovhost child (T1021.006)
-- `006_wmi_process_creation_suspicious.yaml` — WMI remote process (T1047)
+- 005 - SMB Lateral Movement
+- 006 - WMI Process Creation
+- 008 - PsExec Service Creation
+- 017 - WinRM Remoting
+- 018 - SMB File Copy
 
-### Persistence / Privilege Escalation
-- `004_scheduled_task_creation_persistence.yaml` — New scheduled task (T1053.005)
-- `009_New_Local_Admin_Account.yaml` — New user added to Administrators (T1098)
-- `014_Registry_RunKey_Persistence.yaml` — Run/RunOnce modifications (T1547.001)
-- `016_Suspicious_WMI_Persistence.yaml` — WMI event subscription (T1546.003)
+### Persistence
+- 004 - Scheduled Task Persistence
+- 009 - New Local Admin
+- 014 - Registry Run Key Persistence
+- 016 - WMI Persistence
+
+### Defense Evasion
+- 011 - AMSI Bypass
+- 013 - Defender Disabled
 
 ### Impact
-- `015_VSSAdmin_Delete_Shadows.yaml` — Shadow copy deletion (T1490)
+- 015 - Shadow Copy Deletion
 
-> Use these with Sentinel’s Scheduled analytic rules. Each YAML already includes `queryFrequency`, `queryPeriod`, severity, MITRE mapping, and connector hints.
+## How to Import
+
+1. Go to **Sentinel > Analytics > Create > Scheduled query rule**
+2. Copy values from YAML file: 
+   - Name, Description, Severity
+   - MITRE tactics/techniques
+   - Query
+   - Frequency and period (1h)
+3. Click **Review + create**
+
+## Testing
+
+Use commands from `attack-simulation/README.md` to trigger each rule in your lab. 

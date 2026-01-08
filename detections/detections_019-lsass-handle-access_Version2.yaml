@@ -1,0 +1,26 @@
+id: 019-lsass-handle-access
+name: LSASS Handle Access Spike
+description: Detects unusual number of processes accessing LSASS handles - credential dumping indicator.
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [CredentialAccess]
+techniques: [T1003.001]
+queryFrequency: 1h
+queryPeriod:  1h
+triggerOperator: gt
+triggerThreshold:  0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 10
+  | where TargetImage endswith "lsass.exe"
+  | summarize AccessCount = count() by SourceImage, Computer
+  | where AccessCount >= 10
+  | project TimeGenerated = now(), Computer, SourceImage, AccessCount
+version: 1.0.0
+tags:
+  - T1003.001
+  - HandleAccess

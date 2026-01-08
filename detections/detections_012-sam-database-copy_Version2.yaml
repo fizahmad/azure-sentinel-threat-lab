@@ -1,0 +1,25 @@
+id: 012-sam-database-copy
+name: SAM Database Copy Detected
+description: Detects reg. exe saving SAM hive - credential theft technique.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId:  AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [CredentialAccess]
+techniques: [T1003.002]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where Image endswith "reg.exe"
+  | where CommandLine has_all ("save", "HKLM", "SAM")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version: 1.0.0
+tags:
+  - T1003.002
+  - CredentialTheft

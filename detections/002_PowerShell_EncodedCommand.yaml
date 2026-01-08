@@ -1,31 +1,26 @@
-id: 2c77f1a6-b0b4-4583-9470-ff0a93657f5f
+id: 002-powershell-encoded-command
 name: PowerShell Encoded Command Execution
-description: Detects obfuscated/encoded PowerShell execution (Base64 encoded commands) often used to bypass basic logging and AV.
+description: Detects obfuscated/encoded PowerShell execution (Base64 encoded commands) often used to bypass logging and AV. 
 severity: High
 status: Available
 requiredDataConnectors:
-	- connectorId: SecurityEvents
-		dataTypes: [SecurityEvent]
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes:  [SecurityEvent]
 tactics: [Execution, DefenseEvasion]
 techniques: [T1059.001]
 queryFrequency: 1h
 queryPeriod: 1h
-triggerOperator: gt
+triggerOperator:  gt
 triggerThreshold: 0
-eventGroupingSettings:
-	aggregationKind: SingleAlert
 kind: Scheduled
 query: |-
-	// Detects encoded or obfuscated PowerShell commands
-	let lookback = 1h;
-	SecurityEvent
-	| where TimeGenerated >= ago(lookback)
-	| where EventID == 4688
-	| where NewProcessName has_any ("powershell.exe", "pwsh.exe")
-	| where CommandLine has_any ("-enc ", "-encodedcommand", "FromBase64String")
-	| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
+  SecurityEvent
+  | where TimeGenerated >= ago(1h)
+  | where EventID == 4688
+  | where NewProcessName has_any ("powershell. exe", "pwsh.exe")
+  | where CommandLine has_any ("-enc ", "-encodedcommand", "FromBase64String")
+  | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
 version: 1.0.0
 tags:
-	- mitre-technique:T1059.001
-	- datasource:SecurityEvent
-	- usecase:ObfuscatedExecution
+  - T1059.001
+  - ObfuscatedExecution

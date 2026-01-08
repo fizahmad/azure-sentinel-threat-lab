@@ -1,0 +1,25 @@
+id: 008-psexec-service-creation
+name: PsExec Service Creation
+description:  Detects PSEXESVC service creation which indicates PsExec lateral movement. 
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes:  [SecurityEvent]
+tactics: [LateralMovement, Execution]
+techniques: [T1021.002]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SecurityEvent
+  | where TimeGenerated >= ago(1h)
+  | where EventID == 7045
+  | where ServiceName has "PSEXESVC"
+  | project TimeGenerated, Computer, Account, ServiceName, ServiceFileName
+version: 1.0.0
+tags:
+  - T1021.002
+  - PsExec

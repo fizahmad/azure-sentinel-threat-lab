@@ -1,0 +1,25 @@
+id: 010-powershell-download
+name:  Suspicious PowerShell Download
+description:  Detects PowerShell downloading content using IEX, IWR, DownloadString - common staging technique.
+severity: High
+status: Available
+requiredDataConnectors:
+  - connectorId:  AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [Execution]
+techniques: [T1059.001]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind:  Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where Image has_any ("powershell.exe", "pwsh.exe")
+  | where CommandLine has_any ("IEX", "Invoke-Expression", "DownloadString", "Invoke-WebRequest", "iwr ", "curl ", "wget ")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version: 1.0.0
+tags:
+  - T1059.001
+  - Staging

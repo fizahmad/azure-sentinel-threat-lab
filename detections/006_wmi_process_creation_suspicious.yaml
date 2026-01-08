@@ -1,29 +1,24 @@
-id: 3b5d0e3d-0b8b-4b5c-9fdb-4a1f3af7d17f
-name: WMI Remote Process Creation
-description: Detects processes spawned by WMI (wmiprvse.exe parent) which can indicate remote code execution via WMI.
+id: 006-wmi-process-creation
+name:  WMI Remote Process Creation
+description: Detects processes spawned by WMI (wmiprvse.exe parent) which can indicate remote code execution via WMI. 
 severity: Medium
 status: Available
 requiredDataConnectors:
-	- connectorId: AzureMonitorWindowsAgents
-		dataTypes: [SysmonEvent]
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
 tactics: [LateralMovement, Execution]
 techniques: [T1047]
 queryFrequency: 1h
 queryPeriod: 1h
 triggerOperator: gt
 triggerThreshold: 0
-eventGroupingSettings:
-	aggregationKind: SingleAlert
 kind: Scheduled
-query: |-
-	let lookback = 1h;
-	SysmonEvent
-	| where TimeGenerated >= ago(lookback)
-	| where EventID == 1
-	| where ParentImage endswith "wmiprvse.exe"
-	| project TimeGenerated, Computer, Process, CommandLine, ParentImage
+query:  |-
+  SysmonParsed
+  | where EventID == 1
+  | where ParentImage endswith "wmiprvse.exe"
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
 version: 1.0.0
 tags:
-	- mitre-technique:T1047
-	- datasource:Sysmon
-	- usecase:RemoteExecution
+  - T1047
+  - RemoteExecution

@@ -1,0 +1,24 @@
+id: 017-winrm-remoting
+name: Remote PowerShell Remoting (WinRM)
+description: Detects wsmprovhost.exe spawning processes - indicates WinRM/PowerShell remoting. 
+severity: Medium
+status: Available
+requiredDataConnectors:
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes:  [SecurityEvent]
+tactics: [LateralMovement]
+techniques:  [T1021.006]
+queryFrequency: 1h
+queryPeriod:  1h
+triggerOperator: gt
+triggerThreshold:  0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where ParentImage endswith "wsmprovhost.exe"
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version: 1.0.0
+tags:
+  - T1021.006
+  - WinRM

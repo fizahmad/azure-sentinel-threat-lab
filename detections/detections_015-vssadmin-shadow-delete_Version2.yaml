@@ -1,0 +1,25 @@
+id: 015-vssadmin-shadow-delete
+name: Shadow Copy Deletion
+description: Detects vssadmin deleting shadow copies - ransomware preparation technique.
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [Impact]
+techniques: [T1490]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator:  gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 1
+  | where Image endswith "vssadmin.exe"
+  | where CommandLine has_all ("delete", "shadows")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+version:  1.0.0
+tags:
+  - T1490
+  - Ransomware

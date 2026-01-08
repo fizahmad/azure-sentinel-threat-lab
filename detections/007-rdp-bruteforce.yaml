@@ -1,0 +1,27 @@
+id: 007-rdp-bruteforce
+name:  RDP Brute Force Logon Failures
+description: Detects multiple failed RDP logon attempts (Event 4625) from same source, indicating brute force attack.
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [CredentialAccess]
+techniques: [T1110.001]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SecurityEvent
+  | where TimeGenerated >= ago(1h)
+  | where EventID == 4625
+  | where LogonType == 10
+  | summarize FailedAttempts = count() by TargetAccount, IpAddress, Computer
+  | where FailedAttempts >= 5
+  | project TimeGenerated = now(), Computer, TargetAccount, IpAddress, FailedAttempts
+version: 1.0.0
+tags:
+  - T1110.001
+  - BruteForce

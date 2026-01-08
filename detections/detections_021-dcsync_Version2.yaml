@@ -1,0 +1,27 @@
+id: 021-dcsync
+name: DCSync Replication Request
+description:  Detects directory replication requests from non-DC machines - DCSync attack indicator.
+severity: Critical
+status: Available
+requiredDataConnectors:
+  - connectorId:  AzureMonitorWindowsAgents
+    dataTypes:  [SecurityEvent]
+tactics: [CredentialAccess]
+techniques: [T1003.006]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator:  gt
+triggerThreshold: 0
+kind: Scheduled
+query: |-
+  SecurityEvent
+  | where TimeGenerated >= ago(1h)
+  | where EventID == 4662
+  | where ObjectType contains "domainDNS"
+  | where OperationType == "Object Access"
+  | where Properties has_any ("Replicating Directory Changes", "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2")
+  | project TimeGenerated, Computer, Account, ObjectName, Properties
+version: 1.0.0
+tags:
+  - T1003.006
+  - DCSync

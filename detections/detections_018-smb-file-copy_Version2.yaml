@@ -1,0 +1,24 @@
+id: 018-smb-file-copy
+name: SMB Admin Share File Copy
+description: Detects file writes to admin shares (C$, ADMIN$) - lateral movement staging. 
+severity: High
+status: Available
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
+tactics: [LateralMovement]
+techniques: [T1021.002]
+queryFrequency: 1h
+queryPeriod: 1h
+triggerOperator: gt
+triggerThreshold: 0
+kind:  Scheduled
+query: |-
+  SysmonParsed
+  | where EventID == 11
+  | where TargetFilename has_any ("\\ADMIN$\\", "\\C$\\")
+  | project TimeGenerated, Computer, User, Image, TargetFilename
+version: 1.0.0
+tags:
+  - T1021.002
+  - FileCopy

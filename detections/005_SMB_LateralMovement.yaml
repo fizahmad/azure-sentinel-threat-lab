@@ -1,31 +1,25 @@
-id: 9b85de7f-8e83-49bb-8825-66798a0c4b68
+id: 005-smb-lateral-movement
 name: SMB Admin Share Access (Lateral Movement)
-description: Detects successful connections to administrative SMB shares (ADMIN$, C$, IPC$) which often precede lateral movement or remote execution.
+description: Detects connections to administrative SMB shares (ADMIN$, C$, IPC$) which often precede lateral movement. 
 severity: High
 status: Available
-requiredDataConnectors:
-	- connectorId: MicrosoftThreatProtection
-		dataTypes: [DeviceNetworkEvents]
+requiredDataConnectors: 
+  - connectorId: AzureMonitorWindowsAgents
+    dataTypes: [SecurityEvent]
 tactics: [LateralMovement]
 techniques: [T1021.002]
 queryFrequency: 1h
 queryPeriod: 1h
 triggerOperator: gt
 triggerThreshold: 0
-eventGroupingSettings:
-	aggregationKind: SingleAlert
 kind: Scheduled
 query: |-
-	// Detects remote connection to ADMIN$, C$, IPC$ shares across SMB
-	let lookback = 1h;
-	DeviceNetworkEvents
-	| where TimeGenerated >= ago(lookback)
-	| where RemotePort == 445
-	| where RemoteUrl has_any ("ADMIN$", "C$", "IPC$")
-	| where ActionType == "ConnectionSuccess"
-	| project TimeGenerated, DeviceName, AccountName, RemoteIP, RemoteUrl, InitiatingProcessFileName
+  SysmonParsed
+  | where EventID == 3
+  | where DestinationPort == 445
+  | where not(DestinationIp == "127.0.0.1")
+  | project TimeGenerated, Computer, User, Image, DestinationIp, DestinationPort
 version: 1.0.0
 tags:
-	- mitre-technique:T1021.002
-	- datasource:DeviceNetworkEvents
-	- usecase:LateralMovement
+  - T1021.002
+  - LateralMovement
