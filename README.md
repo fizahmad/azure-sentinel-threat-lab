@@ -48,7 +48,7 @@ azure-sentinel-threat-lab/
 ## Status
 
 - [x] Setup guides complete
-- [x] 6 Sentinel analytic rules built (001–006)
+- [x] 21 Sentinel analytic rules built (001–021)
 - [x] Log parsers for Sysmon and PowerShell added
 - [ ] Attack simulation mappings documented
 - [ ] Automation playbook templates added
