@@ -1,0 +1,9 @@
+```kql
+let threshold = 10;
+SecurityEvent
+| where TimeGenerated > ago(60m)
+| where EventID == 4625
+| summarize FailedAttempts=count(), Accounts=make_set(Account, 10) by IpAddress, Computer, bin(TimeGenerated, 5m)
+| where FailedAttempts >= threshold
+| order by FailedAttempts desc
+```

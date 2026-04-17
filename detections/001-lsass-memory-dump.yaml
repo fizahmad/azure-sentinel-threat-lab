@@ -1,25 +1,44 @@
-id: 001-lsass-memory-dump
-name: LSASS Memory Dump Detected
-description: Catches processes accessing lsass.exe memory - credential dumping technique used by mimikatz, procdump etc.
-severity: High
-status: Available
-requiredDataConnectors: 
-  - connectorId: AzureMonitorWindowsAgents
-    dataTypes: [SecurityEvent]
-tactics: [CredentialAccess]
-techniques:  [T1003.001]
-queryFrequency: 1h
-queryPeriod: 1h
-triggerOperator: gt
+id: "001"
+name: "001 - LSASS Memory Dump (ProcDump)"
+description: >
+  Detects attempts to dump lsass.exe memory using Sysinternals ProcDump.
+  This is a common credential dumping technique (MITRE T1003.001).
+severity: "High"
+
+tactics:
+  - "CredentialAccess"
+techniques:
+  - "T1003.001"
+
+queryFrequency: "PT5M"
+queryPeriod: "PT1H"
+triggerOperator: "GreaterThan"
 triggerThreshold: 0
-kind: Scheduled
-query: |-
-  SysmonParsed
-  | where EventID == 10
-  | where TargetImage endswith "lsass.exe"
-  | where not(SourceImage has_any ("svchost.exe", "lsass.exe", "MsMpEng.exe", "csrss.exe", "vmtoolsd.exe"))
-  | project TimeGenerated, Computer, SourceImage, TargetImage, SourceUser, GrantedAccess
-version: 1.0.0
-tags:
-  - T1003.001
-  - CredentialDumping
+
+query: |
+  // 001 - LSASS Memory Dump (ProcDump)
+  // Data: Sysmon (Microsoft-Windows-Sysmon/Operational) via WindowsEvent table
+  let timeframe = 1h;
+  WindowsEvent
+  | where TimeGenerated >= ago(timeframe)
+  | where Provider == "Microsoft-Windows-Sysmon"
+  | where EventID == 1
+  | extend Image = tostring(EventData.Image),
+           CommandLine = tostring(EventData.CommandLine),
+           ParentImage = tostring(EventData.ParentImage),
+           User = tostring(EventData.User),
+           Computer = tostring(Computer)
+  | where Image has_any ("\\procdump.exe", "\\procdump64.exe")
+  | where CommandLine has "lsass" and CommandLine has_any ("-ma", "-mm", ".dmp")
+  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
+  | order by TimeGenerated desc
+
+entityMappings:
+  - entityType: "Host"
+    fieldMappings:
+      - identifier: "FullName"
+        columnName: "Computer"
+  - entityType: "Account"
+    fieldMappings:
+      - identifier: "Name"
+        columnName: "User"
