@@ -1,26 +1,40 @@
-id: 002-powershell-encoded-command
-name: PowerShell Encoded Command Execution
-description: Detects obfuscated/encoded PowerShell execution (Base64 encoded commands) often used to bypass logging and AV. 
-severity: High
-status: Available
-requiredDataConnectors:
-  - connectorId: AzureMonitorWindowsAgents
-    dataTypes:  [SecurityEvent]
-tactics: [Execution, DefenseEvasion]
-techniques: [T1059.001]
-queryFrequency: 1h
-queryPeriod: 1h
-triggerOperator:  gt
+id: "002"
+name: "002 - PowerShell Encoded Command Execution"
+description: >
+  Detects PowerShell execution with Base64 encoded commands using -EncodedCommand/-enc.
+  Uses Windows Security Event ID 4688 (process creation) from the SecurityEvent table.
+severity: "High"
+
+tactics:
+  - "Execution"
+  - "DefenseEvasion"
+techniques:
+  - "T1059.001"
+
+queryFrequency: "PT5M"
+queryPeriod: "PT1H"
+triggerOperator: "GreaterThan"
 triggerThreshold: 0
-kind: Scheduled
-query: |-
+
+query: |
+  // 002 - PowerShell Encoded Command Execution
+  // Data: Windows Security Event 4688 via SecurityEvent table
+
+  let timeframe = 1h;
   SecurityEvent
-  | where TimeGenerated >= ago(1h)
+  | where TimeGenerated >= ago(timeframe)
   | where EventID == 4688
-  | where NewProcessName has_any ("powershell. exe", "pwsh.exe")
-  | where CommandLine has_any ("-enc ", "-encodedcommand", "FromBase64String")
+  | where NewProcessName has_any ("\\powershell.exe", "\\pwsh.exe")
+  | where CommandLine has_any (" -enc ", " -encodedcommand ", "FromBase64String", " -e ")
   | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
-version: 1.0.0
-tags:
-  - T1059.001
-  - ObfuscatedExecution
+  | order by TimeGenerated desc
+
+entityMappings:
+  - entityType: "Host"
+    fieldMappings:
+      - identifier: "FullName"
+        columnName: "Computer"
+  - entityType: "Account"
+    fieldMappings:
+      - identifier: "Name"
+        columnName: "Account"
