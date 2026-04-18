@@ -1,24 +1,18 @@
-# 🤖 Alert Automation (Logic Apps)
+# Alert Automation (Logic Apps)
 
-This folder contains exported workflows from Azure Logic Apps that automate incident response actions.
+This folder contains Logic Apps playbooks used to automate incident response in Microsoft Sentinel.
 
-## Included (examples)
-- `playbook-alert-to-email.json` — On Sentinel incident creation: get incident → extract entities → send email to SOC DL.
-- `playbook-alert-to-teams.json` — Post to Teams webhook with incident link and entities.
-- `playbook-auto-contain-host.json` — (placeholder) Isolate host via Defender for Endpoint API when high-severity alert fires.
+## Examples of automation
+- Notify (Email / Teams)
+- Enrich (add entities, lookups, tagging)
+- Respond (contain host, disable user) — lab-only and permission-dependent
 
 ## How to import
-1) Sentinel > Automation > Create > Import playbook (Logic App) > Upload JSON.
-2) Fix connections: `azureloganalytics`, `office365`, `teams` as prompted.
-3) Grant the Logic App `Microsoft Sentinel Responder` role to the workspace.
-4) Enable the playbook as an automation rule (Incident triggers: `When Azure Sentinel incident is created`).
-
-## Suggested automation rules
-- Severity >= High → Run `playbook-auto-contain-host.json` (after you create a service principal with isolate permissions).
-- All severities → Run `playbook-alert-to-email.json` for awareness.
-- Lateral movement detections → Run `playbook-alert-to-teams.json` to SOC channel.
+1) Sentinel → Automation → Create → Import playbook (Logic App) → Upload JSON  
+2) Fix connections as prompted  
+3) Assign required roles to the Logic App identity  
+4) Enable via Automation Rules (trigger on incident creation)
 
 ## Notes
-- Keep one playbook per action; chain via automation rules to stay modular.
-- Store any secrets (webhook URLs, SP credentials) in Key Vault and reference via managed identity.
-- Sample payload mappings are annotated inside each JSON file.
+- Keep playbooks modular (one action per playbook where possible).
+- Store secrets in Key Vault and reference via managed identity.

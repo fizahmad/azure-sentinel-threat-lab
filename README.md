@@ -9,6 +9,7 @@ This project replicates a Security Operations Center (SOC) workflow using **Micr
 - Simulate adversary behavior using known TTPs
 - Build custom **KQL detection rules**
 - Automate alerts with **Logic Apps**
+- Validate detections in Sentinel and document findings
 
 ## Tools & Technologies
 
@@ -20,7 +21,8 @@ This project replicates a Security Operations Center (SOC) workflow using **Micr
 - **KQL (Kusto Query Language)**
   - for detection logic
 - **Attack Simulation**
-  - Debian-based Linux (for attack simulations)
+  - Windows VM (Security logs + optional Sysmon)
+  - Linux VM (optional)
 - **Markdown**
   - for documentation 
 
@@ -28,45 +30,25 @@ This project replicates a Security Operations Center (SOC) workflow using **Micr
 
 ```
 azure-sentinel-threat-lab/
-├── README.md                              # Main project overview and roadmap
+├── README.md                              # Main project overview
 ├── setup/                                 # Initial lab setup phase
-│   ├── README.md                          # Intro and lab goals for the setup phase
-│   ├── azure_account_setup.md             # Guide to creating Azure free trial account
-│   ├── kali_vm_setup.md                   # Steps for deploying Linux VM (for attack simulation)
-│   ├── sentinel_windows_onboarding.md     # Connecting Windows VM logs to Sentinel
-│   └── windows_vm_setup.md                # Creating and configuring Windows 10 VM via Azure
-├── parsers/                               # KQL functions for log normalization
-│   ├── README.md                          # How to deploy parser functions
-│   ├── Sysmon-Operational-Parser.txt      # Sysmon log parser
-│   └── PowerShell-Operational-Parser.txt  # PowerShell log parser
+├── parsers/                               # Optional KQL parsers / normalization helpers
 ├── detections/                            # Custom KQL rules for threat detection
-├── attack-simulation/                     # Simulated attacks and emulation scripts
-├── automation/                            # Logic Apps for alert automation
+├── attack-simulation/                     # Simulated attacks and emulation steps (lab-only)
+├── automation/                            # Logic Apps playbooks for alert automation
 └── reports/                               # Detection screenshots and incident writeups
 ```
 
-## Status
-
-- [x] Setup guides complete
-- [x] 21 Sentinel analytic rules built (001–021)
-- [x] Log parsers for Sysmon and PowerShell added
-- [ ] Attack simulation mappings documented
-- [ ] Automation playbook templates added
-- [ ] Testing and validation in progress
-- [ ] Reports with screenshots pending
-
 ## How to Use This Lab
 
-1. **Setup** → Follow `setup/README.md` to build the Azure + VM environment. 
-2. **Parsers** → Deploy KQL functions from `parsers/` to normalize Sysmon and PowerShell logs.
-3. **Detections** → Import YAMLs from `detections/` into Sentinel as Scheduled analytic rules.
-4. **Simulate** → Use `attack-simulation/README.md` commands (lab-only) to trigger detections. 
-5. **Automate** → Deploy Logic Apps from `automation/` for incident response. 
-6. **Document** → Capture findings in `reports/` per the template structure.
+1. **Setup** → Follow `setup/` to build the Azure + VM environment. 
+2. **Parsers** → Deploy functions from `parsers/` if you are using them.
+3. **Detections** → Import rules from `detections/` into Sentinel analytics.
+4. **Simulate** → Use `attack-simulation/` steps to trigger detections (lab-only).
+5. **Automate** → Deploy Logic Apps from `automation/` for incident response.
+6. **Document** → Capture findings in `reports/`.
 
+## Notes
 
-## Project Purpose and Motivation
-
-I'm currently learning more about cloud security and blue team roles. I created this lab to apply what I'm studying in a practical way, using Microsoft tools like Azure, Sentinel, KQL, and Logic Apps. 
-
-Sharing this publicly helps me stay accountable and maybe help others learning too. 
+- This repo is for learning and lab testing only.
+- Do not run attack simulations on production systems.
