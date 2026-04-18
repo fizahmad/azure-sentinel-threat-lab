@@ -3,8 +3,8 @@
 ## What this is
 This report documents the lab validation for Detection Rule **002**.
 
-- **Detection file:** [`detections/002-powershell-encoded-command.yaml`](/detections/002-powershell-encoded-command.yaml)
-- **Simulation guide:** [`attack-simulation/002-PowerShell-EncodedCommand-Simulation.md`](/attack-simulation/002-PowerShell-EncodedCommand-Simulation.md)
+- **Detection file:** [`detections/002_PowerShell_EncodedCommand.yaml`](/detections/002_PowerShell_EncodedCommand.yaml)
+- **Simulation guide:** [`attack-simulation/002-PowerShell-EncodedCommand.md`](/attack-simulation/002-PowerShell-EncodedCommand.md)
 
 ## Goal
 Trigger the detection by executing PowerShell using a Base64 payload with `-EncodedCommand`, then capture evidence (logs + incident) in Microsoft Sentinel.
@@ -25,7 +25,7 @@ You should see Event ID **4688**. If you see **no 4688 events**, stop and fix Wi
 
 <p align="center">
   <img width="850" height="450" alt="SecurityEvent Summary (4688 present)"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/41338ba8-60b5-44e7-b672-6c547e6b3b7e">
 </p>
 
 <p align="center"><em>Figure: SecurityEvent Summary (4688 present)</em></p>
@@ -33,20 +33,20 @@ You should see Event ID **4688**. If you see **no 4688 events**, stop and fix Wi
 ### Step 2: Create/Enable the Analytic Rule (Rule 002)
 In Azure Portal:
 1. Microsoft Sentinel → your workspace
-2. Analytics → Create → Scheduled query rule
-3. Copy the query + settings from: `detections/002-powershell-encoded-command.yaml`
+2. Analytics → Create → Scheduled query rule/NRT Rule
+3. Copy the query + settings from: [`detections/002_PowerShell_EncodedCommand.yaml`](/detections/002_PowerShell_EncodedCommand.yaml)
 4. Enable incident creation
 
 <p align="center">
   <img width="850" height="450" alt="Rule 002 configuration page-1"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/55bb8179-d61a-4d4f-8fd0-08ac3532bb2c">
 </p>
 
 <p align="center"><em>Figure: Rule 002 configuration page-1</em></p>
 
 <p align="center">
   <img width="850" height="450" alt="Rule 002 configuration page-2"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/a409cc27-663c-429a-85d4-a9751acd99cb">
 </p>
 
 <p align="center"><em>Figure: Rule 002 configuration page-2</em></p>
@@ -57,7 +57,7 @@ In Azure Portal:
 
 <p align="center">
   <img width="850" height="450" alt="PowerShell EncodedCommand Execution"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/fb05739c-92e5-4304-b486-48aa8a3f694e">
 </p>
 
 <p align="center"><em>Figure: PowerShell EncodedCommand Execution</em></p>
@@ -77,7 +77,7 @@ SecurityEvent
 
 <p align="center">
   <img width="850" height="450" alt="4688 events showing EncodedCommand"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/892403cf-c9e9-4daa-b884-f51cd236ef08">
 </p>
 
 <p align="center"><em>Figure: 4688 events showing EncodedCommand</em></p>
@@ -88,14 +88,14 @@ SecurityEvent
 
 <p align="center">
   <img width="850" height="450" alt="Incidents list showing the new incident"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/c7d03542-a304-40d7-bd1a-aa79018bd1bb">
 </p>
 
 <p align="center"><em>Figure: Incidents</em></p>
 
 <p align="center">
   <img width="850" height="450" alt="Incident Details Page"
-       src="PASTE_YOUR_SCREENSHOT_LINK_HERE">
+       src="https://github.com/user-attachments/assets/2e99a684-8b4a-409e-98a6-f444a4605a6d">
 </p>
 
 <p align="center"><em>Figure: Incident Details Page</em></p>
