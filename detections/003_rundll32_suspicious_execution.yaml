@@ -1,25 +1,40 @@
-id: 003-rundll32-suspicious-execution
-name: Rundll32 Suspicious Script Execution
-description: Detects LOLBin abuse where rundll32.exe launches script-based payloads or URL handlers instead of DLL exports.
-severity: Medium
-status: Available
-requiredDataConnectors: 
-  - connectorId: AzureMonitorWindowsAgents
-    dataTypes: [SecurityEvent]
-tactics: [DefenseEvasion, Execution]
-techniques: [T1218.011]
-queryFrequency: 1h
-queryPeriod: 1h
-triggerOperator:  gt
+id: "003"
+name: "003 - Rundll32 Suspicious Script Execution"
+description: >
+  Detects LOLBin abuse where rundll32.exe launches script-based payloads or URL handlers
+  (javascript:, vbscript:, url.dll patterns) based on Windows Security Event ID 4688.
+severity: "Medium"
+
+tactics:
+  - "DefenseEvasion"
+  - "Execution"
+techniques:
+  - "T1218.011"
+
+queryFrequency: "PT5M"
+queryPeriod: "PT1H"
+triggerOperator: "GreaterThan"
 triggerThreshold: 0
-kind: Scheduled
-query: |-
-  SysmonParsed
-  | where EventID == 1
-  | where Image endswith "rundll32.exe"
-  | where CommandLine has_any (".js", ".vbs", "url.dll", "javascript:", "vbscript:")
-  | project TimeGenerated, Computer, User, Image, CommandLine, ParentImage
-version: 1.0.0
-tags:
-  - T1218.011
-  - LOLBin
+
+query: |
+  // 003 - Rundll32 Suspicious Script Execution
+  // Data: Windows Security Event 4688 via SecurityEvent table
+
+  let timeframe = 1h;
+  SecurityEvent
+  | where TimeGenerated >= ago(timeframe)
+  | where EventID == 4688
+  | where NewProcessName endswith "\\rundll32.exe"
+  | where CommandLine has_any ("javascript:", "vbscript:", "url.dll", "mshtml", ".sct", ".js", ".vbs", "RunHTMLApplication")
+  | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
+  | order by TimeGenerated desc
+
+entityMappings:
+  - entityType: "Host"
+    fieldMappings:
+      - identifier: "FullName"
+        columnName: "Computer"
+  - entityType: "Account"
+    fieldMappings:
+      - identifier: "Name"
+        columnName: "Account"
